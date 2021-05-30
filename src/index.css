@@ -1,0 +1,231 @@
+@import '~antd/dist/antd.css';
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif,
+    'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* login */
+.login-form {
+  max-width: 450px;
+  margin: 0 auto;
+  margin-top: calc((100vh - 385px) / 2);
+  padding: 3rem 3rem 4rem;
+  border: 1px solid rgba(204, 204, 204, 0.2);
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.register-form {
+  max-width: 600px;
+  margin-top: 12rem;
+}
+
+.login-form h1 {
+  color: rgba(204, 204, 204);
+  text-align: center;
+  padding-bottom: 1.5rem;
+}
+
+/* Layout */
+.loading {
+  margin: 45vh auto;
+  text-align: center;
+  z-index: 1000;
+}
+
+.ant-layout-sider,
+.site-layout-sub-header-background {
+  background: #fff;
+  border-right: 1px solid #f1f1f1;
+}
+
+.site-layout-background {
+  position: relative;
+  min-height: calc(100vh);
+  max-height: calc(100vh);
+  overflow-y: scroll;
+  background: #fff;
+}
+.inner-container {
+  padding: 1.5rem;
+  margin: 1.5rem;
+}
+
+.ant-pagination {
+  text-align: center;
+}
+
+.menuList {
+  height: 75vh;
+  border-right: 0;
+}
+
+.userInfo {
+  height: 25vh;
+  width: 100%;
+  padding-top: 1.5rem;
+}
+
+.ant-tabs-content-holder {
+  padding: 1.5rem 3rem;
+}
+
+/* Modal Draggable resizable */
+
+.ant-design-draggable-modal .customized-modal {
+  padding-bottom: 0;
+  border: 1px solid #eee;
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2),
+    0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+}
+
+.ant-design-draggable-modal
+  .ant-modal-header
+  .ant-design-draggable-modal-title {
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.ant-design-draggable-modal .ant-modal-content {
+  overflow: hidden;
+}
+
+.customized-modal-button {
+  position: fixed;
+  left: calc(200px + 3.5rem);
+  bottom: 3.5rem;
+  padding: 4px 10px;
+  box-shadow: 0px 4px 5px -4px rgba(0, 0, 0, 0.2),
+    0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 4px 15px 2px rgba(0, 0, 0, 0.12);
+}
+
+.iconExpand {
+  margin-left: 0.5rem;
+}
+
+.customized-modal .ant-modal-close {
+  display: none;
+}
+
+.ant-design-draggable-modal .customized-modal .ant-modal-footer {
+  position: absolute;
+  right: 18px;
+  top: 8px;
+  border: 0;
+  display: block;
+  padding: 0;
+}
+
+.ant-switch-checked.btnEnable {
+  background: #ff9900;
+}
+
+/* list */
+.demo-loadmore-list {
+  min-height: 350px;
+}
+
+.editable-row .ant-form-item-explain {
+  position: absolute;
+  top: 100%;
+  font-size: 12px;
+}
+
+/* allView */
+.ant-descriptions-item-content > div {
+  width: 100%;
+}
+
+.ant-checkbox-group-item {
+  display: block;
+}
+
+.ant-empty-normal {
+  margin: 0;
+}
+
+.reportTitle .ant-divider-inner-text {
+  font-size: 1.2rem;
+  color: #aaa;
+}
+
+/* test map */
+.map-container {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.clicked-coord-label {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: white;
+  border-radius: 5px;
+}
+
+.clicked-coord-label p {
+  margin: 10px;
+}
+
+/* scroll */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #04c2c9;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #04c2;
+}
+
+/* disabled style */
+.ant-input[disabled] {
+  color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.01);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.ant-select-disabled.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.01);
+  cursor: not-allowed;
+}
+.ant-select-disabled.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector
+  .ant-select-selection-placeholder {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.btnUploadDraft .ant-upload.ant-upload-select {
+  width: 100%;
+}
