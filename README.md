@@ -1,70 +1,109 @@
-# Getting Started with Create React App
+# WM3 Tower (관제서버 프로그램)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+## 촬영 프로젝트를 생성하고 관리하는 일련의 과정을 처리하는 프로그램
 
-In the project directory, you can run:
+### Stacks
 
-### `yarn start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+javascript, react, redux, redux-thunk, redux-promise, ol, antd, eslint, toast-ui
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 1. USER
 
-### `yarn test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Sign up
+  - 회원가입시 게스트 권한 부여, 관리자가 권한 변경 가능
 
-### `yarn build`
+* Sign in
+  - guest/worker/admin 권한에 따라 로그인 및 페이지 이동 됨
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![user.gif](./image/user.gif)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 2. PROJECT
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `yarn eject`
+- 촬영 프로젝트 관리
+  - 프로젝트 생성 및 정보 수정, 프로젝트 삭제
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+* Draft 경로 입력
+  - 멀티파일 업로드 가능, 등록 후 수정은 불가하며 기존 경로 다운로드 후 새경로 덮어쓰기 가능
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- User 할당
+  - 프로젝트를 관리하는 유저 목록 관리
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+![project.gif](./image/project.gif)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 3. VEHICLE
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- 장비 관리
+  - Vehicle 등록 및 수정, 삭제
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![vehicle.gif](./image/vehicle.gif)
 
-### Code Splitting
+## 4. JOURNEY
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+- 촬영계획 CRUD
+  - 경로계획 - Mission 경로 입력
+  - LOG 업로드 - Recorded 경로 입력, 장비 선택
+  - 보고 - 데이터 업로드 / IE 처리
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+* 촬영물 추가
+  - LOG 업로드 - Recorded 경로 입력, 장비 선택
+  - 보고 - 데이터 업로드 / IE 처리
 
-### Making a Progressive Web App
+- 촬영계획 한번에 보기 - 보고
+  - 촬영계획명, 경로계획 목록, 장비명, 업로드로그 파일명, 업로그 nas 경로, ins 파일명
+  - 각 스텝 description 표시
+  - 로그데이터 표시
+    - 처리결과 및 지도 표시
+      - 경로계획, 촬영경로, 프로젝트 Draft 경로
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+![journey.gif](./image/journey.gif)
 
-### Advanced Configuration
+## 설치방법
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+### How to use this project
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+1. .env 파일을 만든다.
+2. 환경 변수를 저장한다.
+3. /src/config.js 파일에 저장한 환경변수를 연결한다.
+4. .gitignore에 추가한다.
+5. package.json를 아래 코드를 추가한다. (set PORT=3002는 삭제 가능)
+6. 서버와 프록시 설정 (서버 api 포트를 확인)
 
-### `yarn build` fails to minify
+```
+"scripts": {
+    "start:dev": "copy .env.dev .env && react-scripts start",
+    "start": "copy .env.prod .env && set PORT=3002 && react-scripts start",
+    ...
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+###Installation
+
+```
+npm install
+yarn install
+```
+
+###Running
+
+```
+// 로컬 개발 시
+npm run start:dev
+yarn start:dev
+
+// 배포시
+npm run start
+yarn start
+```
