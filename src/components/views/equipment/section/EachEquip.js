@@ -18,12 +18,7 @@ const EachEquip = ({ equip, hasActions, onEdit, handleDelete }) => {
       size="small"
       bordered
       key={equip?.id}
-      style={{ marginBottom: 20 }}
-      pagination={{
-        onChange: (page) => {
-          console.log(page);
-        }
-      }}>
+      style={{ marginBottom: 20 }}>
       <Descriptions.Item label="Name">{equip?.name}</Descriptions.Item>
       <Descriptions.Item label="Serial Number">
         {equip?.serialNum}
