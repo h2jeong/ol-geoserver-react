@@ -9,7 +9,8 @@ const JourneyList = ({
   projectId,
   handleAllVisible,
   handleChangeEnable,
-  handleFilter
+  handleFilter,
+  handleZoom
 }) => {
   const journey = useSelector(
     ({ journey }) => ({
@@ -17,7 +18,7 @@ const JourneyList = ({
     }),
     shallowEqual
   );
-  // console.log('journeyList:', journey.list);
+
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
 
@@ -82,6 +83,7 @@ const JourneyList = ({
         handleChangeEnable={handleChangeEnable}
         handleAllVisible={handleAllVisible}
         handleFilter={handleFilter}
+        handleZoom={handleZoom}
       />
     </>
   );

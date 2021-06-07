@@ -4,7 +4,7 @@ import { DraggableModalProvider } from 'ant-design-draggable-modal';
 import ModalDragResize from '../../common/ModalDragResize';
 import JourneyList from './section/JourneyList';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Select, Spin } from 'antd';
+import { message, Select, Spin } from 'antd';
 import { getImageWMS } from '../../common/MakeVectorLayers';
 import {
   getJourneyForProjects,
@@ -12,7 +12,7 @@ import {
 } from '../../../store/project';
 import { setAllList } from '../../../store/journey';
 
-const GeoMap = lazy(() => import('./section/GeoMap'));
+const GeoMap = lazy(() => import('../../common/GeoMap'));
 
 const JourneyPage = () => {
   const project = useSelector(
@@ -25,8 +25,8 @@ const JourneyPage = () => {
   const [projectList, setProjectList] = useState([]);
   const [current, setCurrent] = useState(project.current);
   const [layerList, setLayerList] = useState([]);
-  const [draftLayers, setDraftLayers] = useState([]);
   const [allJourney, setAllJourney] = useState([]);
+  const [focus, setFocus] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -65,7 +65,9 @@ const JourneyPage = () => {
           position: 'absolute',
           top: 0,
           left: 0,
-          zIndex: 10
+          zIndex: 10,
+          boxShadow:
+            '0px 4px 5px -4px rgba(0, 0, 0, 0.2),0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 4px 15px 2px rgba(0, 0, 0, 0.12)'
         }}
         size="large"
         placeholder="Select a project"
@@ -79,7 +81,6 @@ const JourneyPage = () => {
 
   useEffect(() => {
     dispatch(setCurrentProject(current));
-    // check : if none or all => current project & journey list
     let selected = projectList;
     if (!current) {
       selected = project.list;
@@ -96,15 +97,37 @@ const JourneyPage = () => {
 
   useEffect(() => {
     async function fetchApi() {
+      let projectIds = projectList
+        ?.filter((item) => item.isEnabled)
+        .map((item) => item.id);
+
+      if (projectIds.length === 0) {
+        dispatch(setAllList([]));
+        setAllJourney([]);
+      } else {
+        dispatch(getJourneyForProjects(projectIds))
+          .then(async (res) => {
+            const journeyList = await res.payload;
+            setAllJourney(journeyList);
+            dispatch(setAllList(journeyList));
+          })
+          .catch((err) => {
+            message.error(`Error message - ${err}`, 10);
+          });
+      }
+    }
+
+    fetchApi();
+  }, [projectList]);
+
+  useEffect(() => {
+    async function makeJouneyLayers() {
       let tempList = [];
-      let journeys = [];
-      let projectIds = [];
 
       for (let i = 0; i < projectList?.length; i += 1) {
-        const { id, isEnabled, drafts } = projectList[i];
+        const { id, drafts, isEnabled } = projectList[i];
 
         if (!isEnabled) continue;
-
         for (let i = 0; i < drafts?.length; i += 1) {
           const { uuid, type } = drafts[i];
           const wmsLayer = await getImageWMS(
@@ -120,36 +143,9 @@ const JourneyPage = () => {
 
           tempList.push(wmsLayer);
         }
-        projectIds.push(id);
       }
-
-      if (projectIds.length > 0) {
-        dispatch(getJourneyForProjects(projectIds)).then(async (res) => {
-          if (!res.payload) return;
-          const journeyList = await res.payload;
-
-          journeys.push(...journeyList);
-        });
-      }
-
-      setTimeout(() => {
-        setDraftLayers(tempList);
-        dispatch(setAllList(journeys));
-        setAllJourney(journeys);
-      }, 1000);
-    }
-
-    if (!projectList) return;
-    fetchApi();
-  }, [projectList]);
-
-  useEffect(() => {
-    async function makeJouneyLayers() {
-      let tempList = [];
-
       for (let i = 0; i < allJourney?.length; i += 1) {
         const { id, missions, records, uploads, isVisible } = allJourney[i];
-        // if (!isVisible) continue;
 
         for (let i = 0; i < missions?.length; i += 1) {
           const { mission, isEnabled } = missions[i];
@@ -172,7 +168,7 @@ const JourneyPage = () => {
           }
         }
         for (let i = 0; i < uploads?.length; i += 1) {
-          const { recorded, id } = uploads[i];
+          const { recorded } = uploads[i];
 
           for (let i = 0; i < recorded?.length; i += 1) {
             const { uuid, type } = recorded[i];
@@ -190,7 +186,14 @@ const JourneyPage = () => {
           }
         }
         for (let i = 0; i < records?.length; i += 1) {
-          const { recorded, id } = records[i];
+          const { recorded, name } = records[i];
+
+          let color = '#008000';
+          let size = 5;
+          if (name === 'bestPos1') {
+            color = '#00ff00';
+            size = 2;
+          }
 
           for (let i = 0; i < recorded?.length; i += 1) {
             const { uuid, type } = recorded[i];
@@ -198,20 +201,23 @@ const JourneyPage = () => {
               uuid,
               'recorded',
               'ImageWMS',
-              '#00ff00',
-              2,
+              color,
+              size,
               isVisible,
               type,
-              id
+              id,
+              name
             );
+
             tempList.push(wmsLayer);
           }
         }
       }
-      setLayerList(tempList);
-      console.log('tempList:', tempList);
+      setTimeout(() => {
+        setLayerList(tempList);
+      }, 100);
     }
-    if (!allJourney) return;
+
     makeJouneyLayers();
   }, [allJourney]);
 
@@ -219,9 +225,6 @@ const JourneyPage = () => {
     if (!id) {
       for (let i = 0; i < layerList.length; i += 1) {
         layerList[i].setVisible(value);
-      }
-      for (let i = 0; i < draftLayers.length; i += 1) {
-        draftLayers[i].setVisible(value);
       }
     } else {
       for (let i = 0; i < layerList.length; i += 1) {
@@ -243,6 +246,10 @@ const JourneyPage = () => {
     setAllJourney(list);
   };
 
+  const handleZoom = (journey) => {
+    setFocus(journey);
+  };
+
   return (
     <DraggableModalProvider>
       <Suspense
@@ -253,7 +260,7 @@ const JourneyPage = () => {
         }>
         <LayoutPage menu="1">
           <ProjectDialog />
-          <GeoMap addLayers={[...draftLayers, ...layerList]} />
+          <GeoMap addLayers={layerList} focus={focus} />
           <ModalDragResize
             title="촬영목록필터"
             initialWidth={700}
@@ -263,6 +270,7 @@ const JourneyPage = () => {
               handleAllVisible={handleAllVisible}
               handleChangeEnable={handleChangeEnable}
               handleFilter={handleFilter}
+              handleZoom={handleZoom}
             />
           </ModalDragResize>
         </LayoutPage>

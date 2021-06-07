@@ -17,8 +17,16 @@ const JourneyTable = ({
   size,
   handleAllVisible,
   handleChangeEnable,
-  handleFilter
+  handleFilter,
+  handleZoom
 }) => {
+  const project = useSelector(
+    ({ project }) => ({
+      current: project.current
+    }),
+    shallowEqual
+  );
+
   const journey = useSelector(
     ({ journey }) => ({
       list: journey.list,
@@ -26,6 +34,8 @@ const JourneyTable = ({
     }),
     shallowEqual
   );
+
+  const [index, setIndex] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [list, setList] = useState([]);
@@ -38,9 +48,12 @@ const JourneyTable = ({
     setList(journey.list);
   }, [journey.list]);
 
+  useEffect(() => {
+    setIndex(index + 1);
+  }, [project.current]);
+
   const handleChange = (pagination, filters, sorter, extra) => {
     setList(extra.currentDataSource);
-    //console.log('필터링:', extra.currentDataSource);
     handleFilter(extra.currentDataSource);
   };
 
@@ -53,6 +66,7 @@ const JourneyTable = ({
   const handleReset = (clearFilters) => {
     clearFilters();
     setList(journey.list);
+    handleFilter(journey.list);
     setSearchText('');
   };
 
@@ -74,6 +88,10 @@ const JourneyTable = ({
         history.push(`/journey/${journeyId}`);
       }
     });
+  };
+
+  const handleSelect = (journey) => {
+    handleZoom(journey);
   };
 
   const getColumnSearchProps = (dataIndex) => ({
@@ -122,7 +140,6 @@ const JourneyTable = ({
         </Space>
       </div>
     ),
-
     filterIcon: (filtered) => (
       <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
@@ -138,7 +155,6 @@ const JourneyTable = ({
         setTimeout(() => ref.current.select(), 100);
       }
     },
-
     render: (text) => {
       return searchedColumn === dataIndex ? (
         <Highlighter
@@ -159,7 +175,6 @@ const JourneyTable = ({
       width: 55,
       dataIndex: 'detail',
       key: 'detail',
-
       render: (_, record) => (
         <Typography.Link
           onClick={() => handleClick(record.id)}
@@ -173,11 +188,11 @@ const JourneyTable = ({
       width: 80,
       dataIndex: 'isVisible',
       key: 'isVisible',
-
       render: (_, record) => (
         <Switch
           onChange={(value) => handleVisible(value, record.id)}
           checked={record.isVisible}
+          disabled={!record.isEnabled}
           size="small"
         />
       )
@@ -187,7 +202,12 @@ const JourneyTable = ({
       width: 180,
       dataIndex: 'name',
       key: 'name',
-      ...getColumnSearchProps('name')
+      ...getColumnSearchProps('name'),
+      render: (_, record) => (
+        <Typography.Link onClick={() => handleSelect(record)}>
+          {record.name}
+        </Typography.Link>
+      )
     },
     {
       title: '처리진행',
@@ -282,7 +302,6 @@ const JourneyTable = ({
         multiple: 2
       },
       defaultSortOrder: 'descend',
-
       render: (_, record) => (
         <Switch
           onChange={(value) => handleArchive(value, record.id)}
@@ -314,6 +333,7 @@ const JourneyTable = ({
 
   return (
     <Table
+      key={index}
       columns={columns}
       dataSource={list}
       size={size}
