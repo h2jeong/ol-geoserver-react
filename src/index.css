@@ -63,6 +63,7 @@ code {
   overflow-y: scroll;
   background: #fff;
 }
+
 .inner-container {
   padding: 1.5rem;
   margin: 1.5rem;
@@ -109,9 +110,9 @@ code {
 
 .customized-modal-button {
   position: fixed;
-  left: calc(200px + 3.5rem);
-  bottom: 3.5rem;
-  padding: 4px 10px;
+  left: calc(200px);
+  top: 3rem;
+  padding: 4px 20px;
   box-shadow: 0px 4px 5px -4px rgba(0, 0, 0, 0.2),
     0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 4px 15px 2px rgba(0, 0, 0, 0.12);
 }
@@ -154,7 +155,8 @@ code {
 }
 
 .ant-checkbox-group-item {
-  display: block;
+  display: flex;
+  padding-bottom: 5px;
 }
 
 .ant-empty-normal {
