@@ -119,7 +119,6 @@ export default function reducer(state = {}, action) {
       return { loginSuccess: false };
     case AUTH_USER: {
       let response = JSON.parse(JSON.stringify(action.payload));
-      // console.log('auth:', response);
       let isAuth = false;
       let isAdmin = false;
       let isError = false;
@@ -129,7 +128,6 @@ export default function reducer(state = {}, action) {
         if (response.user.role === 'ROLE_ADMIN') isAdmin = true;
       }
       if (response.name === 'Error') {
-        console.log('name:', response.name);
         isError = true;
         loginSuccess = false;
       }

@@ -59,7 +59,10 @@ export function setCurrentProject(id) {
 export function updateProject(updateData) {
   const request = axios
     .patch(`${config.twr_api}/api/worker/contents/project`, updateData)
-    .then((res) => res.data);
+    .then((res) => {
+      // console.log('res:', res.data);
+      return res.data;
+    });
 
   return { type: UPDATE_PROJECT, payload: request };
 }
@@ -98,10 +101,9 @@ export function getJourneyForProject(projectId) {
     .get(`${config.twr_api}/api/worker/contents/journey/all`, {
       params: {
         projectId,
-        bDraft: true,
-        bDraftGeom: true,
-        bRecordGeom: true,
-        bPlanGeom: true
+        bDraftGeom: false,
+        bRecordGeom: false,
+        bPlanGeom: false
       }
     })
     .then((res) => {
@@ -125,6 +127,8 @@ export function getJourneyForProject(projectId) {
           uploaderName: item.uploadStep?.uploader?.userName
         }));
         return { projectId, journeyList };
+      } else {
+        return [];
       }
     });
 
@@ -141,10 +145,9 @@ export function getJourneyForProjects(projectIds) {
       { projectIds },
       {
         params: {
-          bDraft: true,
-          bDraftGeom: true,
-          bRecordGeom: true,
-          bPlanGeom: true
+          bDraftGeom: false,
+          bRecordGeom: false,
+          bPlanGeom: false
         }
       }
     )
@@ -169,6 +172,8 @@ export function getJourneyForProjects(projectIds) {
           uploaderName: item.uploadStep?.uploader?.userName
         }));
         return journeyList;
+      } else {
+        return [];
       }
     });
   return { type: GET_JOURNEY_FOR_PROJECTS, payload: request };
@@ -216,7 +221,7 @@ export default function reducer(state = {}, action) {
         // const journey = action.payload?.find(
         //   (item) => item.projectId === project.id
         // );
-        const journey = action.payload.filter(
+        const journey = action.payload?.filter(
           (item) => item.projectId === project.id
         );
         if (journey) return { ...project, journeyList: journey };

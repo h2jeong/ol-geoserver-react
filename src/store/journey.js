@@ -31,10 +31,9 @@ export function getJourneyOne(id) {
     .get(`${config.twr_api}/api/worker/contents/journey`, {
       params: {
         id,
-        bDraft: true,
-        bDraftGeom: true,
-        bRecordGeom: true,
-        bPlanGeom: true
+        bDraftGeom: false,
+        bRecordGeom: false,
+        bPlanGeom: false
       }
     })
     .then((res) => {
@@ -320,7 +319,6 @@ export default function reducer(state = initialState, action) {
       };
     }
     case UPDATE_JOURNEY:
-      console.log('UPDATE_JOURNEY', action.payload);
       return {
         ...state,
         list: state.list.map((item) => {
@@ -357,10 +355,8 @@ export default function reducer(state = initialState, action) {
       };
     }
     case UPDATE_PLAN: {
-      console.log('UPDATE_PLAN', action.payload);
       // let response = JSON.parse(JSON.stringify(action.payload));
       if (action.payload.success) {
-        console.log('update:', action.payload.planStep);
         const updated = {
           ...state.current,
           status: action.payload.status,
@@ -379,7 +375,6 @@ export default function reducer(state = initialState, action) {
       } else return state;
     }
     case UPDATE_RECORD: {
-      console.log('UPDATE_RECORD', action.payload);
       if (!action.payload.success) return state;
       const updated = {
         ...state.current,
@@ -398,7 +393,6 @@ export default function reducer(state = initialState, action) {
       };
     }
     case UPDATE_UPLOAD: {
-      console.log('UPDATE_UPLOAD', action.payload);
       if (!action.payload.success) return state;
       const updated = {
         ...state.current,
@@ -435,7 +429,6 @@ export default function reducer(state = initialState, action) {
       };
     }
     case CREATE_RECORD: {
-      console.log('CREATE_RECORD', action.payload);
       if (!action.payload.success) return state;
       const updated = {
         ...state.current,
@@ -490,7 +483,6 @@ export default function reducer(state = initialState, action) {
       };
     }
     case CREATE_PLAN: {
-      console.log('CREATE_PLAN', action.payload);
       if (!action.payload.success) return state;
       const updated = {
         ...state.current,
