@@ -16,6 +16,7 @@ const ModalDragResize = ({ title, initialWidth, initialHeight, children }) => {
   const onOk = useCallback(() => {
     setCollapase(false);
     setVisible(true);
+    setCollapase(true);
   }, [collapse]);
 
   const onCancel = useCallback(() => setVisible(false), []);
@@ -42,6 +43,7 @@ const ModalDragResize = ({ title, initialWidth, initialHeight, children }) => {
     <>
       {!visible && (
         <Button
+          size="large"
           onClick={onOk}
           className="customized-modal-button"
           type="primary">

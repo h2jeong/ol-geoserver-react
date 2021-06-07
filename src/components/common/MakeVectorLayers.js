@@ -4,6 +4,8 @@ import { Stroke, Style, Fill, Circle } from 'ol/style';
 import axios from 'axios';
 import { Image as ImageLayer, Vector as VectorLayer } from 'ol/layer';
 import { config } from '../../config';
+import { View } from 'ol';
+import { transformExtent } from 'ol/proj';
 
 export const getImageWMS = async (
   uuid,
@@ -13,7 +15,8 @@ export const getImageWMS = async (
   lineWidth,
   isVisible,
   geoType,
-  key
+  key,
+  fileName
 ) => {
   let typedSld = '';
 
@@ -53,7 +56,9 @@ export const getImageWMS = async (
     source: wmsSource,
     name: name,
     type: layerType,
-    key: key
+    key,
+    uuid,
+    fileName
   });
 
   const zIndex = 100;
@@ -67,7 +72,7 @@ export const getImageWMS = async (
       zLevel = zIndex + 1;
       break;
     case 'recorded':
-      if (key.includes('markPos')) {
+      if (fileName.includes('markPos')) {
         zLevel = zIndex + 3;
       } else {
         zLevel = zIndex + 2;
@@ -171,6 +176,52 @@ export const MakeVectorLayers = async (data, name, styleOptions) => {
   const styledLayer = changeStyle(geoVectorLayer, options);
 
   return styledLayer;
+};
+
+export const getFeatureInfoFromGeoSever = async (options) => {
+  const { name, value, type } = options;
+  const url = `${config.geoserver}/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=poclacorr%3A${type}&maxFeatures=50&outputFormat=application%2Fjson&cql_filter=${name}=%27${value}%27`;
+
+  const res = await fetch(url, {
+    method: 'GET',
+    mode: 'cors'
+  });
+
+  const json = await res.json();
+  const { bbox } = json;
+
+  if (!bbox) return;
+  const bbox3857 = transformExtent(bbox, 'EPSG:4326', 'EPSG:3857');
+  return bbox3857;
+};
+
+const getCenterOfExtent = (Extent) => {
+  if (!Extent) return;
+  var X = Extent[0] + (Extent[2] - Extent[0]) / 2;
+  var Y = Extent[1] + (Extent[3] - Extent[1]) / 2;
+  return [X, Y];
+};
+
+export const setZoomOnMap = (bbox, map) => {
+  if (!bbox) return;
+  if (!map) return;
+
+  const centerCoordinate = getCenterOfExtent(bbox);
+
+  map.setView(
+    new View({
+      center: centerCoordinate,
+      zoom: map.getView().getZoom(),
+      minZoom: 6,
+      maxZoom: 19
+    })
+  );
+
+  map.getView().fit(bbox, {
+    constrainResolution: false,
+    padding: [50, 50, 50, 50]
+    // minResolution: 10
+  });
 };
 
 export default MakeVectorLayers;
