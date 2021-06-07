@@ -34,9 +34,6 @@ export default function (WrapedComponent, reload, adminRoute = null) {
               props.history.push('/');
             } else {
               if (reload === false) props.history.push('/');
-              // else {
-              //   console.log('reload', reload);
-              // }
             }
           } else {
             props.history.push('/login');
