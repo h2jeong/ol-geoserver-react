@@ -21,10 +21,26 @@ const AllView = () => {
     if (!journey.current?.id || journey.mode !== 'view') return;
 
     dispatch(getJourneyOne(journey.current.id)).then((res) => {
-      const { id, uploadStep, planStep, ieStep, vehicleName } = res.payload;
+      const {
+        id,
+        name,
+        description,
+        recordStep,
+        uploadStep,
+        planStep,
+        ieStep,
+        vehicleName
+      } = res.payload;
 
       setJourneyInfo({
         id,
+        name,
+        description,
+        record: {
+          filePath:
+            recordStep?.recordLayers && recordStep.recordLayers[0].filePath,
+          content: recordStep?.content
+        },
         upload: {
           nasPath: uploadStep?.nasPath,
           content: uploadStep?.content
@@ -40,9 +56,11 @@ const AllView = () => {
         vehicleName: vehicleName
       });
     });
-  }, [journey.current.id]);
+  }, [journey.current?.id]);
 
   useEffect(() => {
+    if (!journey.current) return;
+
     const planList = journey.current?.planStep?.planLayers
       ?.filter((item) => item.mission)
       .map((item) => ({
@@ -79,6 +97,16 @@ const AllView = () => {
 
   return (
     <>
+      <Descriptions labelStyle={{ fontWeight: 600, minWidth: 140 }}>
+        <Descriptions.Item span={3}>
+          <span style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
+            {journeyInfo?.name}
+          </span>
+        </Descriptions.Item>
+        <Descriptions.Item label="메모">
+          {journeyInfo?.description}
+        </Descriptions.Item>
+      </Descriptions>
       <Divider className="reportTitle">경로 계획</Divider>
       <Descriptions labelStyle={{ fontWeight: 600, minWidth: 140 }}>
         <Descriptions.Item label="경로 계획 목록" span={3}>

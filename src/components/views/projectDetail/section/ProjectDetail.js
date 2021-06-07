@@ -12,7 +12,7 @@ import {
 } from 'antd';
 import Title from 'antd/lib/typography/Title';
 import { DownloadOutlined } from '@ant-design/icons';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { lazy, useEffect, useRef, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { config } from '../../../../config';
 import { getJourneyForProject, getProjectOne } from '../../../../store/project';
@@ -21,7 +21,8 @@ import MakeVectorLayers, {
   getGeoJSONfromFile,
   getImageWMS
 } from '../../../common/MakeVectorLayers';
-import GeoMap from '../../journey/section/GeoMap';
+const GeoMap = lazy(() => import('../../../common/GeoMap'));
+
 const { Option } = Select;
 
 const ProjectDetail = ({ projectInfo }) => {
@@ -57,7 +58,6 @@ const ProjectDetail = ({ projectInfo }) => {
       let tempList = [];
 
       if (!isEnabled) return;
-
       for (let i = 0; i < drafts?.length; i += 1) {
         const { uuid, type } = drafts[i];
         const wmsLayer = await getImageWMS(
@@ -73,7 +73,7 @@ const ProjectDetail = ({ projectInfo }) => {
 
         tempList.push(wmsLayer);
       }
-      setLayerList([...tempList, ...layerList]);
+      setLayerList(tempList);
     }
 
     if (!projectInfo) return;
@@ -135,7 +135,7 @@ const ProjectDetail = ({ projectInfo }) => {
 
           dispatch(getProjectOne(id));
           dispatch(getJourneyForProject(id)).then((res) => {
-            console.log('update:', res.payload);
+            console.log('getJourneyForProject;', res.payload);
             message.success('Success to update project.');
             dispatch(editMode(false));
             window.location.reload();
@@ -146,7 +146,7 @@ const ProjectDetail = ({ projectInfo }) => {
 
         return true;
       });
-    }, 1000);
+    }, 100);
   };
 
   const props = {
@@ -170,7 +170,7 @@ const ProjectDetail = ({ projectInfo }) => {
       setTimeout(() => {
         setLayerList(newList);
         message.info('geojson 표시 완료');
-      }, 1000);
+      }, 100);
       return false;
     },
     onChange: (info) => {
@@ -296,8 +296,8 @@ const ProjectDetail = ({ projectInfo }) => {
                 }}
                 type="default"
                 icon={<DownloadOutlined />}
-                href={`${config.twr_api}/api/account/test?projectId=${projectInfo?.id}`}
-                disabled={projectInfo?.draft && projectInfo?.id}
+                href={`${config.twr_api}/api/worker/contents/project/geodata/download?projectId=${projectInfo?.id}`}
+                disabled={!projectInfo?.drafts}
                 target="_blank">
                 이전 경로 다운로드
               </Button>

@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Descriptions, Checkbox, Space, Divider, Spin } from 'antd';
-// import { shallowEqual, useSelector } from 'react-redux';
 import { getImageWMS } from '../../../common/MakeVectorLayers';
 import moment from 'moment';
 import { shallowEqual, useSelector } from 'react-redux';
 
-const GeoMap = lazy(() => import('../../journey/section/GeoMap'));
+const GeoMap = lazy(() => import('../../../common/GeoMap'));
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -31,6 +29,8 @@ const GeoxyzReport = () => {
   const [indeterminate2, setIndeterminate2] = useState(false);
 
   useEffect(() => {
+    if (!journey.current) return;
+
     const { planStep, recordStep } = journey.current;
     const plans =
       planStep?.planLayers
@@ -69,7 +69,7 @@ const GeoxyzReport = () => {
 
   useEffect(() => {
     async function fetchApi() {
-      const { planStep, recordStep, drafts, projectId } = journey.current;
+      const { planStep, recordStep, drafts, projectId, id } = journey.current;
       let tempList = [];
 
       for (let i = 0; i < planStep?.planLayers?.length; i += 1) {
@@ -86,12 +86,13 @@ const GeoxyzReport = () => {
             lineWidth,
             isEnabled,
             type,
+            id,
             name
           );
           tempList.push(wmsLayer);
         }
       }
-      // console.log('recorded:', recordStep);
+
       for (let i = 0; i < recordStep?.recordLayers?.length; i += 1) {
         const { recorded, isEnabled, name } = recordStep?.recordLayers[i];
 
@@ -104,7 +105,6 @@ const GeoxyzReport = () => {
 
         for (let i = 0; i < recorded?.length; i += 1) {
           const { uuid, type } = recorded[i];
-          // console.log('recorded:', name, type);
           const wmsLayer = await getImageWMS(
             uuid,
             'recorded',
@@ -113,6 +113,7 @@ const GeoxyzReport = () => {
             size,
             isEnabled,
             type,
+            id,
             name
           );
 
@@ -137,23 +138,31 @@ const GeoxyzReport = () => {
           tempList.push(wmsLayer);
         }
       }
-      setLayerList(tempList);
+      setTimeout(() => {
+        setLayerList(tempList);
+      }, 100);
     }
 
     if (!journey.current) return;
 
     fetchApi();
-  }, [journey.current]);
+  }, [
+    journey.current?.planStep,
+    journey.current?.recordStep,
+    journey.current?.drafts
+  ]);
 
   useEffect(() => {
     if (!journey.current?.recordStep) return;
 
     const { logData, recordLayers, content, isEnabled } =
       journey.current.recordStep;
+    const convertDistance = logData?.distance?.toFixed(3);
     const diff = moment.duration(logData?.elapsedTime);
     let hour_val = diff.weeks() * 24 * 7 + diff.days() * 24 + diff.hours();
-    const convertElapsed = `${hour_val}시간 ${diff.minutes()}분 ${diff.seconds()}초`;
-    const convertDistance = logData?.distance?.toFixed(3);
+    const convertElapsed = hour_val
+      ? `${hour_val}시간 ${diff.minutes()}분 ${diff.seconds()}초`
+      : `${diff.minutes()}분 ${diff.seconds()}초`;
 
     setLogData({
       filePath: recordLayers && recordLayers[0].filePath,
@@ -179,7 +188,8 @@ const GeoxyzReport = () => {
 
     const selected = layerList.filter((item) => item.get('type') === 'mission');
     for (let i = 0; i < selected.length; i += 1) {
-      if (list.includes(selected[i].get('key'))) selected[i].setVisible(true);
+      if (list.includes(selected[i].get('fileName')))
+        selected[i].setVisible(true);
       else selected[i].setVisible(false);
     }
   };
@@ -191,12 +201,6 @@ const GeoxyzReport = () => {
 
     const selected = layerList.filter(
       (layer) => layer.get('type') === 'mission'
-    );
-    console.log(
-      'onCheckAllPlanChange:',
-      e.target.checked,
-      planCheckedList,
-      selected
     );
 
     for (let i = 0; i < selected.length; i += 1) {
@@ -214,7 +218,8 @@ const GeoxyzReport = () => {
     );
 
     for (let i = 0; i < selected.length; i += 1) {
-      if (list.includes(selected[i].get('key'))) selected[i].setVisible(true);
+      if (list.includes(selected[i].get('fileName')))
+        selected[i].setVisible(true);
       else selected[i].setVisible(false);
     }
   };
@@ -295,42 +300,48 @@ const GeoxyzReport = () => {
       <h3>촬영계획 및 실제촬영 표시</h3>
       <div
         style={{
-          float: 'left',
-          width: '700px',
-          height: '500px',
-          marginRight: '20px',
+          display: 'inline-block',
+          width: `calc(100% - 320px)`,
           border: '1px solid #ccc',
           overflow: 'hidden'
         }}>
         <GeoMap addLayers={layerList} />
       </div>
-      <div style={{ display: 'inline-block' }}>
+      <div style={{ float: 'right', width: '300px' }}>
         <h4>지도표시설정</h4>
         <Space direction="vertical">
-          <Checkbox
-            indeterminate={indeterminate2}
-            onChange={onCheckAllRecordChange}
-            checked={checkAll2}>
-            촬영경로 표시
-          </Checkbox>
-          <CheckboxGroup
-            options={recordOptions}
-            value={recordCheckedList}
-            onChange={onCheckboxRecordChange}
-            style={{ paddingLeft: '1rem' }}
-          />
-          <Checkbox
-            indeterminate={indeterminate1}
-            onChange={onCheckAllPlanChange}
-            checked={checkAll1}>
-            경로계획 표시
-          </Checkbox>
-          <CheckboxGroup
-            options={planOptions}
-            value={planCheckedList}
-            onChange={onCheckboxPlanChange}
-            style={{ paddingLeft: '1rem' }}
-          />
+          {recordOptions.length > 0 && (
+            <>
+              <Checkbox
+                indeterminate={indeterminate2}
+                onChange={onCheckAllRecordChange}
+                checked={checkAll2}>
+                촬영경로 표시
+              </Checkbox>
+              <CheckboxGroup
+                options={recordOptions}
+                value={recordCheckedList}
+                onChange={onCheckboxRecordChange}
+                style={{ paddingLeft: '1rem' }}
+              />
+            </>
+          )}
+          {planOptions.length > 0 && (
+            <>
+              <Checkbox
+                indeterminate={indeterminate1}
+                onChange={onCheckAllPlanChange}
+                checked={checkAll1}>
+                경로계획 표시
+              </Checkbox>
+              <CheckboxGroup
+                options={planOptions}
+                value={planCheckedList}
+                onChange={onCheckboxPlanChange}
+                style={{ paddingLeft: '1rem' }}
+              />
+            </>
+          )}
           <Checkbox onChange={handleShowDraft} name="draft" checked={showDraft}>
             프로젝트 DRAFT 경로 표시
           </Checkbox>

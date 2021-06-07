@@ -36,7 +36,10 @@ const ReportTabs = ({ projectInfo }) => {
   const dispatch = useDispatch();
 
   const handleTab = (key) => {
-    if (key === '6') dispatch(changeMode('view'));
+    if (key === '6') {
+      dispatch(changeMode('view'));
+      window.location.reload();
+    }
     setSelectedKey(key);
   };
 

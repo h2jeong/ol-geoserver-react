@@ -1,5 +1,4 @@
 /* eslint-disable react/display-name */
-/* eslint-disable no-unused-vars */
 import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,7 +8,16 @@ import {
   updateEnable
 } from '../../../store/journey';
 import LayoutPage from '../layout/LayoutPage';
-import { Table, Button, Space, Input, Switch, Typography, Spin } from 'antd';
+import {
+  Table,
+  Button,
+  Space,
+  Input,
+  Switch,
+  Typography,
+  Spin,
+  message
+} from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined, MoreOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
@@ -23,6 +31,7 @@ const JourneyTablePage = () => {
     ({ project }) => ({ list: project.list }),
     shallowEqual
   );
+
   const [list, setList] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -33,29 +42,24 @@ const JourneyTablePage = () => {
 
   useEffect(() => {
     async function fetchApi() {
-      let journeys = [];
-
       const projectIds = project.list
         ?.filter((item) => item.isEnabled)
         .map((item) => item.id);
 
-      dispatch(getJourneyForProjects(projectIds)).then(async (res) => {
-        if (!res.payload) return;
-        const journeyList = await res.payload;
-
-        journeys.push(...journeyList);
-      });
-
-      setTimeout(() => {
-        console.log('journeys:', journeys);
-        setList(journeys);
-        dispatch(setAllList(journeys));
-      }, 1000);
+      if (projectIds.length > 0) {
+        dispatch(getJourneyForProjects(projectIds))
+          .then((res) => {
+            if (!res.payload) return;
+            setList(res.payload);
+            dispatch(setAllList(res.payload));
+          })
+          .catch((err) => message.error(`Error message - ${err}`, 10));
+      }
     }
-    console.log('projectList:', project.list);
+
     if (!project.list) return;
     fetchApi();
-  }, [project.list.length]);
+  }, []);
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();

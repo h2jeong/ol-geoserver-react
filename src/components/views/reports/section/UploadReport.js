@@ -83,7 +83,7 @@ const UploadReport = () => {
       let variables = {
         ...row,
         content: uploadRef.current.getInstance().getMarkdown(),
-        status: statusList?.find((item) => item.name === row.status).uuid
+        status: statusList?.find((item) => item.name === row.status)?.uuid
       };
       setContent(uploadRef.current.getInstance().getMarkdown());
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Upload, Button, Divider, message, Alert, Select } from 'antd';
@@ -13,11 +12,10 @@ import {
 import EachEquip from '../../equipment/section/EachEquip';
 import axios from 'axios';
 import { config } from '../../../../config';
-import { useHistory } from 'react-router';
 
 const { Option } = Select;
 
-const LogUpload = ({ onHandleTab, title }) => {
+const LogUpload = ({ title }) => {
   const journey = useSelector(
     ({ journey }) => ({ current: journey.current, mode: journey.mode }),
     shallowEqual
@@ -37,7 +35,7 @@ const LogUpload = ({ onHandleTab, title }) => {
   const [vehicleId, setVehicleId] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  const ref = useRef(null);
+  const logRef = useRef(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,6 +44,7 @@ const LogUpload = ({ onHandleTab, title }) => {
 
     setVehicleId(vehicle?.id);
     setContent(recordStep?.content);
+    logRef.current.getInstance().setMarkdown(recordStep?.content);
   }, [journey.current]);
 
   const chcekcLogFileAvailable = async (file) => {
@@ -68,7 +67,6 @@ const LogUpload = ({ onHandleTab, title }) => {
       )
       .then((res) => res.data)
       .catch((err) => {
-        // console.log(err.toJSON());
         return err.toJSON();
       });
     return result;
@@ -117,15 +115,9 @@ const LogUpload = ({ onHandleTab, title }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!file) {
-      message.warn('업로드할 파일이 없습니다.');
-      return;
-    }
-
     let journeyId = null;
 
     if (journey.mode === 'add') {
-      console.log('add?');
       journeyId = await getJourneyId();
     } else {
       journeyId = journey.current?.id;
@@ -137,19 +129,27 @@ const LogUpload = ({ onHandleTab, title }) => {
     let apiUrl;
     if (journey.mode === 'view' && journey.current?.recordStep?.recordLayers) {
       apiUrl = updateRecord;
+
+      file && formData.append('file[]', file);
+      message.info('Log 업로드 시작');
+      vehicleId && formData.append('vehicleId', vehicleId);
     } else {
+      if (!file) {
+        message.warn('업로드할 파일이 없습니다.');
+        return;
+      }
       apiUrl = createRecord;
 
       formData.append('bRecordLayer', true);
       formData.append('bRecordGeom', false);
+      formData.append('file[]', file);
+      formData.append('vehicleId', vehicleId);
     }
-    console.log('submit:', file);
-    formData.append('file[]', file);
-    formData.append('journeyId', journeyId);
-    formData.append('vehicleId', vehicleId);
-    formData.append('content', ref.current.getInstance().getMarkdown());
 
-    setContent(ref.current.getInstance().getMarkdown());
+    formData.append('journeyId', journeyId);
+    formData.append('content', logRef.current.getInstance().getMarkdown());
+
+    setContent(logRef.current.getInstance().getMarkdown());
     setUploading(true);
 
     setTimeout(() => {
@@ -166,7 +166,7 @@ const LogUpload = ({ onHandleTab, title }) => {
               setVehicleId(null);
               setUploading(false);
 
-              message.info('Successful Upload Data ');
+              message.success('Successful Upload Data ');
               dispatch(changeMode('view'));
               window.location.reload();
               return true;
@@ -182,7 +182,7 @@ const LogUpload = ({ onHandleTab, title }) => {
         message.error('Failed to upload file.');
         return false;
       }
-    }, 1000);
+    }, 100);
   };
 
   const handleReset = () => {
@@ -192,7 +192,6 @@ const LogUpload = ({ onHandleTab, title }) => {
   const onChange = (value) => {
     const vehicleId = equipment.list?.find((item) => item.id === value).id;
     setVehicleId(vehicleId);
-    // todo: 장비 변경하기
   };
 
   return (
@@ -261,7 +260,7 @@ const LogUpload = ({ onHandleTab, title }) => {
         />
       )}
       <Divider>메모</Divider>
-      <EditorToast initialValue={content} height="200px" editorRef={ref} />
+      <EditorToast initialValue={content} height="200px" editorRef={logRef} />
       <br />
       <div style={{ textAlign: 'center' }}>
         <Button type="primary" onClick={handleSubmit} loading={uploading}>

@@ -52,9 +52,6 @@ const AllUserList = ({ allList, onAdd }) => {
         grid={{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 5 }}
         dataSource={list}
         pagination={{
-          onChange: (page) => {
-            console.log(page);
-          },
           pageSize: 5
         }}
         renderItem={(item) => (

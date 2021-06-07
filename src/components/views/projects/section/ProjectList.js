@@ -121,16 +121,13 @@ const ProjectList = () => {
           style={{ width: 300, marginRight: 8 }}
         />
         <Button type="primary" onClick={showModal}>
-          <PlusOutlined /> 촬영계획 추가
+          <PlusOutlined /> 프로젝트 추가
         </Button>
       </Form.Item>
       <Table
         dataSource={data?.length > 0 && data}
         columns={columns}
         pagination={{
-          onChange: (page) => {
-            console.log(page);
-          },
           position: ['none', 'bottomCenter']
         }}
       />

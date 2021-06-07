@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Modal, Form, Input, Select } from 'antd';
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
@@ -14,8 +13,6 @@ const CreateProject = ({ visible, confirmLoading, handleOk, handleCancel }) => {
   const handleSubmit = async () => {
     try {
       const row = await form.validateFields();
-      // const validate = Object.values(row).every((el) => !!el);
-      // if (!validate) return;
 
       dispatch(createProject(row)).then((res) => {
         if (res.payload.success) handleOk();

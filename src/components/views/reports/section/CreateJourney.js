@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Form, Input, Button, Select, message } from 'antd';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';

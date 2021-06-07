@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Button, Col, Divider, Form, Input, message, Row } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';

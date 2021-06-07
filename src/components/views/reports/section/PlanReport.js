@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 import { Button, Checkbox, Divider, message, Upload } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { lazy, useEffect, useRef, useState } from 'react';
 import EditorToast from '../../../common/EditorToast';
-import GeoMap from '../../journey/section/GeoMap';
 import { UploadOutlined } from '@ant-design/icons';
 import LayerTable from './LayerTable';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
@@ -14,7 +12,8 @@ import MakeVectorLayers, {
   getImageWMS
 } from '../../../common/MakeVectorLayers';
 import { getProjectOne } from '../../../../store/project';
-import { useHistory } from 'react-router';
+
+const GeoMap = lazy(() => import('../../../common/GeoMap'));
 
 const PlanReport = () => {
   const journey = useSelector(
@@ -24,7 +23,7 @@ const PlanReport = () => {
 
   const [content, setContent] = useState('촬영계획 메모');
   const [uploading, setUploading] = useState(false);
-  const [isShowDraft, setIsShowDraft] = useState(false);
+  const [isShowDraft, setIsShowDraft] = useState(true);
 
   const [fileList, setFileList] = useState([]);
   const [layerList, setLayerList] = useState([]);
@@ -33,13 +32,11 @@ const PlanReport = () => {
 
   const ref = useRef(null);
   const dispatch = useDispatch();
-  const history = useHistory();
 
   useEffect(() => {
     if (!journey.current?.planStep) return;
 
     const { planStep } = journey.current;
-    console.log('plan:', planStep);
     const layers = planStep?.planLayers
       ?.filter((item) => item.mission)
       .map((item) => ({
@@ -81,7 +78,7 @@ const PlanReport = () => {
         draftLayers = drafts;
       } else {
         dispatch(getProjectOne(projectId)).then(async (res) => {
-          const { drafts, id } = await res.payload;
+          const { drafts } = await res.payload;
           draftLayers = drafts ? drafts : [];
         });
       }
@@ -104,7 +101,7 @@ const PlanReport = () => {
 
       setTimeout(() => {
         setLayerList(layers);
-      }, 1000);
+      }, 100);
     }
 
     if (!journey.current?.planStep?.planLayers && !journey.current?.drafts)
@@ -125,9 +122,6 @@ const PlanReport = () => {
 
     if (!layerInfos.length) {
       apiUrl = createPlan;
-
-      formData.append('bPlanLayer', true);
-      formData.append('bPlanGeom', false);
     } else {
       apiUrl = updatePlan;
     }
@@ -136,18 +130,18 @@ const PlanReport = () => {
       const { originFileObj } = file;
       formData.append('file[]', originFileObj);
     });
-    const updatedLayers = newLayerInfos
-      //.filter((item) => !item.id && item.isEnabled)
-      .map((item) => ({
-        fileName: item.fileName,
-        lineColor: item.lineColor,
-        lineWidth: item.lineWidth * 1
-      }));
+    const updatedLayers = newLayerInfos.map((item) => ({
+      fileName: item.fileName,
+      lineColor: item.lineColor,
+      lineWidth: item.lineWidth * 1
+    }));
 
     formData.append('journeyId', journey.current.id);
     formData.append('layers', JSON.stringify(updatedLayers));
     formData.append('content', ref.current.getInstance().getMarkdown());
-    console.log('plan::', ...formData);
+    formData.append('bPlanLayer', true);
+    formData.append('bPlanGeom', false);
+
     setContent(ref.current.getInstance().getMarkdown());
     setUploading(true);
 
@@ -178,7 +172,7 @@ const PlanReport = () => {
       }
 
       setUploading(false);
-    }, 1000);
+    }, 100);
   };
 
   const handleReset = () => {
@@ -257,7 +251,7 @@ const PlanReport = () => {
       setTimeout(() => {
         setLayerList([...layerList, ...newLayerList]);
         setNewLayerInfos([...newLayerInfos, ...newInfos]);
-      }, 1000);
+      }, 100);
 
       return false;
     },
@@ -327,7 +321,9 @@ const PlanReport = () => {
       <br />
       <Divider>지도</Divider>
       <GeoMap addLayers={layerList} />
-      <Checkbox onChange={handleShowDraft}>프로젝트 DRAFT 경로 표시</Checkbox>
+      <Checkbox onChange={handleShowDraft} checked={isShowDraft}>
+        프로젝트 DRAFT 경로 표시
+      </Checkbox>
       <br />
       <Divider>메모</Divider>
       <EditorToast initialValue={content} height="200px" editorRef={ref} />

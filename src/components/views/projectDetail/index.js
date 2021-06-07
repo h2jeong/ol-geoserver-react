@@ -12,7 +12,6 @@ const ProjectDetailPage = ({ match }) => {
 
   useEffect(() => {
     dispatch(getProjectOne(projectId)).then((res) => {
-      // console.log('getProjectOne', res.payload);
       setProject(res.payload);
     });
     dispatch(editMode(false));
