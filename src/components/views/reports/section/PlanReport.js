@@ -15,6 +15,7 @@ import { getProjectOne } from '../../../../store/project';
 
 const GeoMap = lazy(() => import('../../../common/GeoMap'));
 
+/** 경로계획 */
 const PlanReport = () => {
   const journey = useSelector(
     ({ journey }) => ({ current: journey.current, mode: journey.mode }),

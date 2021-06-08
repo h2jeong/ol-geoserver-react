@@ -5,6 +5,7 @@ import { createEquip, updateEquip } from '../../../../store/equipment';
 
 const { Option } = Select;
 
+/** 장비 생성 및 수정 화면 */
 const DrawerEquip = ({ mode, equip, visible, onClose, list }) => {
   const user = useSelector(({ user }) => ({ list: user.list }), shallowEqual);
 

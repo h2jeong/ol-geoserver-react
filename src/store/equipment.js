@@ -11,7 +11,7 @@ export function createEquip(newData) {
   const request = axios
     .post(`${config.twr_api}/api/worker/contents/vehicle`, newData)
     .then((res) => {
-      if (res.data.success) {
+      if (res.data.success && res.data.vehicle) {
         res.data.vehicle.key = res.data.vehicle.id;
         return res.data;
       }
@@ -25,7 +25,7 @@ export function getEquipAll() {
     .then((res) => {
       if (res.data.success) {
         return res.data.vehicles
-          .filter((item) => item.isEnabled)
+          ?.filter((item) => item.isEnabled)
           .map((item) => ({ ...item, key: item.id }));
       }
     });
@@ -74,6 +74,7 @@ export default function reducer(state = {}, action) {
   switch (action.type) {
     case CREATE_EQUIP: {
       let equips = [];
+      if (!action.payload) return state;
       if (action.payload.success) {
         if (state.list) equips = [action.payload.vehicle, ...state.list];
         else equips = [action.payload.vehicle];

@@ -9,6 +9,9 @@ import { getStatus } from '../../../store/journey';
 import { getProjectAll, getProjectOne } from '../../../store/project';
 import { getEquipAll } from '../../../store/equipment';
 
+/**
+ * 로그인 후 초기 화면
+ */
 const DashboardPage = () => {
   const user = useSelector(
     ({ user }) => ({

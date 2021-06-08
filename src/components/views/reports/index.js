@@ -4,6 +4,7 @@ import { getJourneyOne } from '../../../store/journey';
 import LayoutPage from '../layout/LayoutPage';
 import ReportTabs from './ReportTabs';
 
+/** Journey 상세 페이지 */
 const ReportsPage = ({ match }) => {
   const project = useSelector(
     ({ project }) => ({ current: project.current, list: project.list }),

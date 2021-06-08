@@ -5,6 +5,9 @@ import { changeMode, changeVisible } from '../../../../store/journey';
 import JourneyTable from './JourneyTable';
 import { useHistory } from 'react-router';
 
+/**
+ * 모달창에 넣을 JourneyList
+ */
 const JourneyList = ({
   projectId,
   handleAllVisible,

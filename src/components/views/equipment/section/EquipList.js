@@ -7,6 +7,7 @@ import DrawerEquip from './DrawerEquip';
 import { deleteEquip } from '../../../../store/equipment';
 import EachEquip from './EachEquip';
 
+/** 전체 장비 목록 */
 const EquipList = () => {
   const equipment = useSelector(
     ({ equipment }) => ({ list: equipment.list }),

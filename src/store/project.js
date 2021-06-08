@@ -218,9 +218,6 @@ export default function reducer(state = {}, action) {
       if (!action.payload) return state;
 
       const newList = state.list.map((project) => {
-        // const journey = action.payload?.find(
-        //   (item) => item.projectId === project.id
-        // );
         const journey = action.payload?.filter(
           (item) => item.projectId === project.id
         );

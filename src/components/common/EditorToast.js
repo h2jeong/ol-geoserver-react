@@ -3,6 +3,9 @@ import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
 
+/*
+Toast ui editor
+*/
 const EditorToast = ({ initialValue, height = 'auto', editorRef }) => {
   return (
     <Editor

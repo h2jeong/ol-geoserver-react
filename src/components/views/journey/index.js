@@ -14,6 +14,11 @@ import { setAllList } from '../../../store/journey';
 
 const GeoMap = lazy(() => import('../../common/GeoMap'));
 
+/**
+ * 촬영이력_지도 화면
+ * 프로젝트 리스트와 그에 속한 모든 Journey의 경로를 레이어로 만들어서 지도에 넘겨준다.
+ * 프로젝트 선택, JourneyList 모달창 control
+ */
 const JourneyPage = () => {
   const project = useSelector(
     ({ project }) => ({

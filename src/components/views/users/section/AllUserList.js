@@ -15,6 +15,7 @@ import Meta from 'antd/lib/card/Meta';
 import { useDispatch } from 'react-redux';
 import { updateUserEnable } from '../../../../store/user';
 
+/** 전체 유저 목록 */
 const AllUserList = ({ allList, onAdd }) => {
   const [list, setList] = useState([]);
   const [search, setSearch] = useState('');

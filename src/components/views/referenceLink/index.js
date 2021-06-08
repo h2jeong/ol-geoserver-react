@@ -5,6 +5,7 @@ import { Typography, Space } from 'antd';
 
 const { Link, Title } = Typography;
 
+/** 참고링크 화면 */
 const ReferenceLinkPage = () => {
   return (
     <LayoutPage menu="7">

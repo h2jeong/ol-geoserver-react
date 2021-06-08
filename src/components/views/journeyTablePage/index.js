@@ -26,6 +26,10 @@ import moment from 'moment';
 
 const { Title } = Typography;
 
+/**
+ * 촬영이력_목록 화면
+ * 전체 JourneyList 불러옴
+ */
 const JourneyTablePage = () => {
   const project = useSelector(
     ({ project }) => ({ list: project.list }),

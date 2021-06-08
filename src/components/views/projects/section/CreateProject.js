@@ -5,6 +5,7 @@ import { createProject } from '../../../../store/project';
 const { Option } = Select;
 const { TextArea } = Input;
 
+/** 프로젝트 생성 팝업 */
 const CreateProject = ({ visible, confirmLoading, handleOk, handleCancel }) => {
   const user = useSelector(({ user }) => ({ list: user.list }), shallowEqual);
   const dispatch = useDispatch();

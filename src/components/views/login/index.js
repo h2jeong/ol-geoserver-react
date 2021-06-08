@@ -5,6 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../store/user';
 
+/** 로그인 화면 */
 const LoginPage = (props) => {
   const dispatch = useDispatch();
   const onFinish = (values) => {

@@ -35,6 +35,7 @@ const tailFormItemLayout = {
   }
 };
 
+/**회원가입 화면 */
 const RegisterPage = (prop) => {
   const [form] = Form.useForm();
 

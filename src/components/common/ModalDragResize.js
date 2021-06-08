@@ -9,6 +9,9 @@ import {
   UpOutlined
 } from '@ant-design/icons';
 
+/**
+ * 촬영이력_지도에 띄운 모달(드래그, 리사이즈 가능)
+ */
 const ModalDragResize = ({ title, initialWidth, initialHeight, children }) => {
   const [visible, setVisible] = useState(true);
   const [collapse, setCollapase] = useState(false);

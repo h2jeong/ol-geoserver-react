@@ -21,10 +21,11 @@ import MakeVectorLayers, {
   getGeoJSONfromFile,
   getImageWMS
 } from '../../../common/MakeVectorLayers';
-const GeoMap = lazy(() => import('../../../common/GeoMap'));
 
+const GeoMap = lazy(() => import('../../../common/GeoMap'));
 const { Option } = Select;
 
+/** 프로그램 상세 정보, Draft 경로 등록 */
 const ProjectDetail = ({ projectInfo }) => {
   const project = useSelector(
     ({ project }) => ({
@@ -159,8 +160,9 @@ const ProjectDetail = ({ projectInfo }) => {
       setLayerList(newList);
     },
     beforeUpload: async (file, fileList) => {
+      let newList = checkPreDrafts(layerList);
       message.info('geojson 표시 시작');
-      let newList = [];
+
       for (let i = 0; i < fileList.length; i += 1) {
         const layer = await makeLayer(fileList[i]);
 
@@ -168,9 +170,10 @@ const ProjectDetail = ({ projectInfo }) => {
         newList.push(layer);
       }
       setTimeout(() => {
-        setLayerList(newList);
+        setLayerList([...newList]);
         message.info('geojson 표시 완료');
       }, 100);
+
       return false;
     },
     onChange: (info) => {
@@ -192,6 +195,10 @@ const ProjectDetail = ({ projectInfo }) => {
 
   const handleEdit = () => {
     dispatch(editMode(true));
+  };
+
+  const checkPreDrafts = (list) => {
+    return list.filter((item) => item.get('name') !== 'ImageWMS');
   };
 
   return (

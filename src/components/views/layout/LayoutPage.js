@@ -4,6 +4,7 @@ import MenuBar from '../menubar';
 
 const { Content } = Layout;
 
+/** Layout */
 const LayoutPage = ({ children, menu }) => {
   return (
     <Layout>

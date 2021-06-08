@@ -7,6 +7,19 @@ import { config } from '../../config';
 import { View } from 'ol';
 import { transformExtent } from 'ol/proj';
 
+/**
+ *
+ * @param {*} uuid - 각 mission, draft, recorded의 uuid
+ * @param {*} layerType - mission/draft,recored
+ * @param {*} name - ImageWMS(wms)/tempLayer(vector)
+ * @param {*} lineColor - styles
+ * @param {*} lineWidth - styles
+ * @param {*} isVisible - styles
+ * @param {*} geoType - point/line/polygon
+ * @param {*} key - projectId/JourneyId
+ * @param {*} fileName - geojson file name
+ * @returns
+ */
 export const getImageWMS = async (
   uuid,
   layerType,
@@ -61,6 +74,7 @@ export const getImageWMS = async (
     fileName
   });
 
+  // set zIndex
   const zIndex = 100;
   let zLevel = 100;
 
@@ -178,6 +192,7 @@ export const MakeVectorLayers = async (data, name, styleOptions) => {
   return styledLayer;
 };
 
+// get Bbox from geoserver
 export const getFeatureInfoFromGeoSever = async (options) => {
   const { name, value, type } = options;
   const url = `${config.geoserver}/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=poclacorr%3A${type}&maxFeatures=50&outputFormat=application%2Fjson&cql_filter=${name}=%27${value}%27`;

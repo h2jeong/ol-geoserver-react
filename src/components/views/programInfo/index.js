@@ -4,6 +4,7 @@ import { List, Typography, Divider } from 'antd';
 import axios from 'axios';
 import { config } from '../../../config';
 
+/** program Info 화면 */
 const ProgramInfoPage = () => {
   const [info, setInfo] = useState([]);
 
@@ -16,6 +17,9 @@ const ProgramInfoPage = () => {
           setInfo(datas);
         }
       });
+    return () => {
+      setInfo([]);
+    };
   }, []);
 
   return (

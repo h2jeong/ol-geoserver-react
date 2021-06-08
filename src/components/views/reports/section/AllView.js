@@ -6,6 +6,7 @@ import { Viewer } from '@toast-ui/react-editor';
 import GeoxyzReport from './GeoxyzReport';
 import { getJourneyOne } from '../../../../store/journey';
 
+/** 한번에 보기 */
 const AllView = () => {
   const journey = useSelector(
     ({ journey }) => ({ current: journey.current, mode: journey.mode }),

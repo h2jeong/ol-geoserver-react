@@ -8,6 +8,10 @@ import { deleteProject, getProjectOne } from '../../../../store/project';
 import Search from 'antd/lib/input/Search';
 import { useHistory } from 'react-router';
 
+/**
+ * 전체 프로젝트 리스트
+ * CRUD
+ * */
 const ProjectList = () => {
   const project = useSelector(
     ({ project }) => ({ list: project.list }),

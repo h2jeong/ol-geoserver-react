@@ -9,6 +9,9 @@ import { extend } from 'ol/extent';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getFeatureInfoFromGeoSever, setZoomOnMap } from './MakeVectorLayers';
 
+/**
+ * initial map, initial TileLayer, VectorLayer
+ */
 const GeoMap = ({ addLayers, focus }) => {
   const project = useSelector(
     ({ project }) => ({ current: project.current }),
@@ -52,6 +55,9 @@ const GeoMap = ({ addLayers, focus }) => {
     setMap(initialMap);
   }, []);
 
+  /**
+   * addLayer on map & set focus, zoom
+   */
   useEffect(() => {
     async function fetchApi() {
       const initLayers = map.getLayers().array_;
@@ -62,7 +68,7 @@ const GeoMap = ({ addLayers, focus }) => {
           i -= 1;
         }
       }
-      console.log('geomap:', initLayers, addLayers);
+      // console.log('geomap:', initLayers, addLayers);
       if (addLayers?.length > 0) {
         for (let i = 0; i < addLayers.length; i += 1) {
           if (addLayers[i]) {
@@ -81,6 +87,10 @@ const GeoMap = ({ addLayers, focus }) => {
     setCurrentZoom(focus);
   }, [focus]);
 
+  /**
+   * 지도 그릴때 Extent 계산하기
+   * @param {*} focus 선택된 Layer가 있을 경우 recorded>mission>drafts 순으로
+   */
   const setCurrentZoom = async (focus) => {
     let featExtent;
     let options = {};

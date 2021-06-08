@@ -8,6 +8,7 @@ const GeoMap = lazy(() => import('../../../common/GeoMap'));
 
 const CheckboxGroup = Checkbox.Group;
 
+/** 로그데이터 표시 및 지도 표시 */
 const GeoxyzReport = () => {
   const journey = useSelector(
     ({ journey }) => ({ current: journey.current }),

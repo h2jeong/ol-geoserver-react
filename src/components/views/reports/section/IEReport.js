@@ -7,6 +7,7 @@ import { config } from '../../../../config';
 import { createIe, updateIe } from '../../../../store/journey';
 import EditorToast from '../../../common/EditorToast';
 
+/** IE 처리보고 */
 const IEReport = () => {
   const journey = useSelector(
     ({ journey }) => ({ current: journey.current, mode: journey.mode }),

@@ -18,6 +18,7 @@ import EditorToast from '../../../common/EditorToast';
 
 const { Option } = Select;
 
+/** 데이터 업로드 보고 */
 const UploadReport = () => {
   const journey = useSelector(
     ({ journey }) => ({

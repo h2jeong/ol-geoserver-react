@@ -4,6 +4,7 @@ import LayoutPage from '../layout/LayoutPage';
 import ProjectDetail from './section/ProjectDetail';
 import { editMode, getProjectOne } from '../../../store/project';
 
+/** 프로젝트 상세 화면 */
 const ProjectDetailPage = ({ match }) => {
   const [project, setProject] = useState(null);
 

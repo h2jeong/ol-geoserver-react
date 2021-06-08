@@ -15,6 +15,7 @@ import { config } from '../../../../config';
 
 const { Option } = Select;
 
+/** 로그업로드 */
 const LogUpload = ({ title }) => {
   const journey = useSelector(
     ({ journey }) => ({ current: journey.current, mode: journey.mode }),

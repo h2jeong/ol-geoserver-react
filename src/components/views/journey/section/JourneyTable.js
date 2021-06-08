@@ -13,6 +13,11 @@ import {
 import { useHistory } from 'react-router';
 import moment from 'moment';
 
+/**
+ * 실제 Jounrey list table
+ * 테이블 filter, sort
+ * 각 Journey enable, visible 처리
+ */
 const JourneyTable = ({
   size,
   handleAllVisible,

@@ -10,6 +10,7 @@ import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import moment from 'moment';
 
+/** 하나의 장비 항목 */
 const EachEquip = ({ equip, hasActions, onEdit, handleDelete }) => {
   const user = useSelector(({ user }) => ({ list: user.list }), shallowEqual);
 

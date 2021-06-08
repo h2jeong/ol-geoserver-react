@@ -4,6 +4,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import LayoutPage from '../layout/LayoutPage';
 import UsersForProject from './section/UsersForProject';
 
+/** 유저관리 화면 */
 const UsersPage = () => {
   const project = useSelector(
     ({ project }) => ({

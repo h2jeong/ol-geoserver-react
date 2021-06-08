@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { authUser } from '../store/user';
 
+/** 유저 권한 체크 HOC */
 export default function (WrapedComponent, reload, adminRoute = null) {
   function AuthenticatonCheck(props) {
     const user = useSelector(

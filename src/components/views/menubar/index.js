@@ -25,6 +25,7 @@ import { resetStore } from '../../../store';
 
 const { Sider } = Layout;
 
+/** 좌측 사이드 메뉴 바, 로그아웃 처리 */
 const MenuBar = (props, { menu }) => {
   const user = useSelector(
     ({ user }) => ({ userData: user.userData }),

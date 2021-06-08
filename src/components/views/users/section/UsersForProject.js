@@ -12,6 +12,7 @@ import { getProjectOne } from '../../../../store/project';
 
 const { Option } = Select;
 
+/** 프로젝트별 유저 목록 */
 const UsersForProject = ({ current }) => {
   const user = useSelector(
     ({ user }) => ({

@@ -18,6 +18,7 @@ const layout = {
   }
 };
 
+/** 촬영계획 추가 - 기본정보 */
 const CreateJourney = ({ title }) => {
   const project = useSelector(
     ({ project }) => ({ list: project.list, current: project.current }),

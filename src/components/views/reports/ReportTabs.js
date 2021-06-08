@@ -20,6 +20,7 @@ import { changeMode } from '../../../store/journey';
 const { Title } = Typography;
 const { TabPane } = Tabs;
 
+/** Journey 촬영계획 단계별 tabs */
 const ReportTabs = ({ projectInfo }) => {
   const journey = useSelector(
     ({ journey }) => ({

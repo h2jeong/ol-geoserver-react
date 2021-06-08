@@ -18,6 +18,7 @@ const colors = [
   '#800080'
 ];
 
+/** 경로계획 목록 */
 const LayerTable = ({ dataList, handleChange, showHeader }) => {
   const handleChangeInput = (e) => {
     const { id, name, value } = e.target;
