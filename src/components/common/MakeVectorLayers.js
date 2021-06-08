@@ -234,7 +234,7 @@ export const setZoomOnMap = (bbox, map) => {
 
   map.getView().fit(bbox, {
     constrainResolution: false,
-    padding: [50, 50, 50, 50]
+    padding: [100, 100, 100, 100]
     // minResolution: 10
   });
 };

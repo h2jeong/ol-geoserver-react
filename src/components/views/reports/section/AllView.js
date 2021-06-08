@@ -111,12 +111,7 @@ const AllView = () => {
       <Divider className="reportTitle">경로 계획</Divider>
       <Descriptions labelStyle={{ fontWeight: 600, minWidth: 140 }}>
         <Descriptions.Item label="경로 계획 목록" span={3}>
-          <Table
-            columns={columns}
-            dataSource={planList}
-            size="small"
-            pagination={false}
-          />
+          <Table columns={columns} dataSource={planList} pagination={false} />
         </Descriptions.Item>
         <Descriptions.Item label="메모">
           {journeyInfo?.plan?.content && (

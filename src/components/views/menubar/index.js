@@ -26,7 +26,7 @@ import { resetStore } from '../../../store';
 const { Sider } = Layout;
 
 /** 좌측 사이드 메뉴 바, 로그아웃 처리 */
-const MenuBar = (props, { menu }) => {
+const MenuBar = (props) => {
   const user = useSelector(
     ({ user }) => ({ userData: user.userData }),
     shallowEqual
@@ -66,7 +66,10 @@ const MenuBar = (props, { menu }) => {
           </Button>
         </Space>
       </Space>
-      <Menu mode="inline" className="menuList" defaultSelectedKeys={[menu]}>
+      <Menu
+        mode="inline"
+        className="menuList"
+        defaultSelectedKeys={[props.menu]}>
         <Menu.Item key="1" icon={<PushpinOutlined />}>
           <Link to="/journey">촬영이력-지도</Link>
         </Menu.Item>

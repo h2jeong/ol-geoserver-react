@@ -289,6 +289,19 @@ const PlanReport = () => {
     <>
       <Divider>신규 업로드</Divider>
 
+      <LayerTable
+        dataList={layerInfos}
+        handleChange={handleChange}
+        editable="true"
+      />
+      {newLayerInfos.length > 0 && (
+        <LayerTable
+          showHeader={false}
+          dataList={newLayerInfos}
+          handleChange={handleChangeNew}
+          editable="true"
+        />
+      )}
       <br />
       <Upload {...props}>
         <Button
@@ -304,21 +317,6 @@ const PlanReport = () => {
         * 현재 경로는 빨간색 실선으로 표시됩니다. 촬영시 혼동되지 않게 적절한
         색깔을 설정하세요.
       </p>
-      <br />
-
-      <LayerTable
-        dataList={layerInfos}
-        handleChange={handleChange}
-        editable="true"
-      />
-      {newLayerInfos.length > 0 && (
-        <LayerTable
-          showHeader={false}
-          dataList={newLayerInfos}
-          handleChange={handleChangeNew}
-          editable="true"
-        />
-      )}
       <br />
       <Divider>지도</Divider>
       <GeoMap addLayers={layerList} />

@@ -71,8 +71,8 @@ const UsersForProject = ({ current }) => {
       // eslint-disable-next-line react/display-name
       render: (_, record) =>
         list.length >= 1 ? (
-          projectInfo?.createdBy === record.userName ? (
-            '생성자'
+          projectInfo?.createdBy === record.id ? (
+            '프로젝트 생성자'
           ) : (
             <Select
               defaultValue={record.role}
@@ -93,7 +93,9 @@ const UsersForProject = ({ current }) => {
       // eslint-disable-next-line react/display-name
       render: (_, record) =>
         list.length >= 1 ? (
-          projectInfo?.createdBy === record.userName ? null : (
+          projectInfo?.createdBy === record.id ? (
+            '-'
+          ) : (
             <Popconfirm
               title="Sure to delete?"
               onConfirm={() => handleDelete(record)}>

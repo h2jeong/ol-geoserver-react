@@ -90,39 +90,23 @@ const GeoMap = ({ addLayers, focus }) => {
   /**
    * 지도 그릴때 Extent 계산하기
    * @param {*} focus 선택된 Layer가 있을 경우 recorded>mission>drafts 순으로
+   * 없을 경우 project draft>temp>recorded>mission
    */
   const setCurrentZoom = async (focus) => {
     let featExtent;
     let options = {};
-    let firstRecorded;
-    let firstMission;
-    let firstDraft;
-    let tempLayers;
 
     if (focus) {
       const { records, missions, projectId } = focus;
-      firstRecorded = records?.find((item) => item.isEnabled);
-      firstMission = missions?.find((item) => item.isEnabled);
-      if (firstRecorded) {
-        options = {
-          name: 'layer_id',
-          value: firstRecorded.id,
-          type: 'recorded'
-        };
-        const extentSecond = await getFeatureInfoFromGeoSever(options);
-        if (extentSecond) {
-          if (featExtent) {
-            featExtent = extend(featExtent, extentSecond);
-          } else {
-            featExtent = extentSecond;
-          }
-        }
-      } else {
-        if (firstMission) {
+      const filterRecorded = records?.filter((item) => item.isEnabled);
+      const filterMission = missions?.filter((item) => item.isEnabled);
+
+      if (filterRecorded && filterRecorded.length > 0) {
+        for (let i = 0; i < filterRecorded.length; i += 1) {
           options = {
             name: 'layer_id',
-            value: firstMission.id,
-            type: 'mission'
+            value: filterRecorded[i].id,
+            type: 'recorded'
           };
           const extentSecond = await getFeatureInfoFromGeoSever(options);
           if (extentSecond) {
@@ -130,6 +114,24 @@ const GeoMap = ({ addLayers, focus }) => {
               featExtent = extend(featExtent, extentSecond);
             } else {
               featExtent = extentSecond;
+            }
+          }
+        }
+      } else {
+        if (filterMission && filterMission.length > 0) {
+          for (let i = 0; i < filterMission.length; i += 1) {
+            options = {
+              name: 'layer_id',
+              value: filterMission[i].id,
+              type: 'mission'
+            };
+            const extentSecond = await getFeatureInfoFromGeoSever(options);
+            if (extentSecond) {
+              if (featExtent) {
+                featExtent = extend(featExtent, extentSecond);
+              } else {
+                featExtent = extentSecond;
+              }
             }
           }
         } else {
@@ -154,17 +156,17 @@ const GeoMap = ({ addLayers, focus }) => {
 
     if (!['all', 'none'].includes(project.current)) {
       if (!focus) {
-        firstDraft = addLayers.find(
+        const firstDraft = addLayers.find(
           (item) => item.get('type') === 'draft' && item.get('visible')
         );
-        firstRecorded = addLayers.find(
+        const firstRecorded = addLayers.find(
           (item) => item.get('type') === 'recorded' && item.get('visible')
         );
-        firstMission = addLayers.find(
+        const firstMission = addLayers.find(
           (item) => item.get('type') === 'mission' && item.get('visible')
         );
 
-        tempLayers = addLayers.filter(
+        const tempLayers = addLayers.filter(
           (item) => item.get('name') === 'tempLayer' && item.get('visible')
         );
 

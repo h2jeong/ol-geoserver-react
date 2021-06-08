@@ -52,8 +52,12 @@ code {
 
 .ant-layout-sider,
 .site-layout-sub-header-background {
-  background: #fff;
-  border-right: 1px solid #f1f1f1;
+  background: #fafafa;
+  border-right: 1px solid #e6e6e6;
+}
+
+.ant-menu {
+  background: #fafafa;
 }
 
 .site-layout-background {

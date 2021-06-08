@@ -208,11 +208,15 @@ const JourneyTable = ({
       dataIndex: 'name',
       key: 'name',
       ...getColumnSearchProps('name'),
-      render: (_, record) => (
-        <Typography.Link onClick={() => handleSelect(record)}>
-          {record.name}
-        </Typography.Link>
-      )
+      render: (_, record) => {
+        return record.isEnabled ? (
+          <Typography.Link onClick={() => handleSelect(record)}>
+            {record.name}
+          </Typography.Link>
+        ) : (
+          record.name
+        );
+      }
     },
     {
       title: '처리진행',

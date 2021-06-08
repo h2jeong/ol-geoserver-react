@@ -160,7 +160,7 @@ const GeoxyzReport = () => {
       journey.current.recordStep;
     const convertDistance = logData?.distance?.toFixed(3);
     const diff = moment.duration(logData?.elapsedTime);
-    let hour_val = diff.weeks() * 24 * 7 + diff.days() * 24 + diff.hours();
+    const hour_val = diff.weeks() * 24 * 7 + diff.days() * 24 + diff.hours();
     const convertElapsed = hour_val
       ? `${hour_val}시간 ${diff.minutes()}분 ${diff.seconds()}초`
       : `${diff.minutes()}분 ${diff.seconds()}초`;
@@ -309,7 +309,7 @@ const GeoxyzReport = () => {
         <GeoMap addLayers={layerList} />
       </div>
       <div style={{ float: 'right', width: '300px' }}>
-        <h4>지도표시설정</h4>
+        <h4>지도 표시 설정</h4>
         <Space direction="vertical">
           {recordOptions.length > 0 && (
             <>

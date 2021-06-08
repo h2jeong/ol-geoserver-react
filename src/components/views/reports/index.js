@@ -50,7 +50,7 @@ const ReportsPage = ({ match }) => {
   }, [journeyId]);
 
   return (
-    <LayoutPage menu="1">
+    <LayoutPage menu="6">
       <div className="inner-container">
         <ReportTabs projectInfo={projectInfo} />
       </div>
